@@ -11,10 +11,10 @@ subject = "This is the subject"
 yag = yagmail.SMTP(user=sender, password=os.getenv('EMAIL_PASSWORD'))
 
 def send_email(receiver, name):
-    contents = f"""
+    contents = [f"""
     Hello {name}
     Here's the email contents!
-    """
+    """, 'text.txt']
 
     yag.send(to=receiver, subject=subject, contents=contents)
     print("Email sent")
