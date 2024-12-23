@@ -1,28 +1,26 @@
 import yagmail
-import time
-from datetime import datetime as dt
 from dotenv import load_dotenv
 import os
+import pandas
 
 load_dotenv()
 
 sender = os.getenv('EMAIL_SENDER')
-receiver = 'sxtapm0r@mailpwr.com'
-
 subject = "This is the subject"
 
-contents = """
-Here's the email contents!
-HELLO
-"""
+yag = yagmail.SMTP(user=sender, password=os.getenv('EMAIL_PASSWORD'))
 
-def send_email():
-    yag = yagmail.SMTP(user=sender, password=os.getenv('EMAIL_PASSWORD'))
+def send_email(receiver, name):
+    contents = f"""
+    Hello {name}
+    Here's the email contents!
+    """
+
     yag.send(to=receiver, subject=subject, contents=contents)
     print("Email sent")
 
-while True:
-    now = dt.now()
-    if now.hour == 15 and now.minute == 42:
-        send_email()
-        time.sleep(60)
+df = pandas.read_csv('contacts.csv')
+print(df)
+
+for index, row in df.iterrows():
+    send_email(row['email'], row['name'])
